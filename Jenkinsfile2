@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     FRONTEND_DIR = 'client'
-    BACKEND_DIR = 'server'
+    BACKEND_DIR = 'backend'
     NODE_ENV = 'production'
   }
 
