@@ -10,7 +10,7 @@ pipeline {
   stages {
     stage('Clone Repo') {
       steps {
-        git 'https://github.com/iamshivam858/resume-analyzer.git'
+        git 'https://github.com/iamshivam858/resume-analyzer-mern-app.git'
       }
     }
 
