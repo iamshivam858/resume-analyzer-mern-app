@@ -50,7 +50,7 @@ pipeline {
       steps {
         dir("${FRONTEND_DIR}") {
           sh 'pm2 delete resume-frontend || true'
-          sh 'pm2 serve build 3000 --name resume-frontend'
+          sh 'pm2 serve dist 3000 --name resume-frontend'
         }
       }
     }
