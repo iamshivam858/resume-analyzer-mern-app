@@ -1,0 +1,68 @@
+pipeline {
+  agent any
+
+  environment {
+    FRONTEND_DIR = 'client'
+    BACKEND_DIR = 'server'
+    NODE_ENV = 'production'
+  }
+
+  stages {
+    stage('Clone Repo') {
+      steps {
+        git 'https://github.com/YOUR_USERNAME/resume-analyzer.git'
+      }
+    }
+
+    stage('Install Backend Dependencies') {
+      steps {
+        dir("${BACKEND_DIR}") {
+          sh 'npm install'
+        }
+      }
+    }
+
+    stage('Install Frontend Dependencies') {
+      steps {
+        dir("${FRONTEND_DIR}") {
+          sh 'npm install'
+        }
+      }
+    }
+
+    stage('Build Frontend') {
+      steps {
+        dir("${FRONTEND_DIR}") {
+          sh 'npm run build'
+        }
+      }
+    }
+
+    stage('Start Backend with PM2') {
+      steps {
+        dir("${BACKEND_DIR}") {
+          sh 'pm2 delete resume-backend || true'
+          sh 'pm2 start server.js --name resume-backend'
+        }
+      }
+    }
+
+    stage('Serve Frontend Build with PM2') {
+      steps {
+        dir("${FRONTEND_DIR}") {
+          sh 'pm2 delete resume-frontend || true'
+          sh 'pm2 serve dist 3000 --name resume-frontend'
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo '✅ Deployment complete!'
+    }
+    failure {
+      echo '❌ Deployment failed!'
+    }
+  }
+}
